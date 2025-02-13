@@ -52,8 +52,46 @@ class Solution
 	boolean isPalindrome(Node head) 
 	{
 		//Write your code here and return boolean value
+		Node firstRef=head;
+		Node middle=findMiddle(head);
+		Node secondRef=reverseLinkedlist(middle.next);
+		
+		while(firstRef!=null&&secondRef!=null){
+		    if(firstRef.data!=secondRef.data){
+		        return false;
+		    }firstRef=firstRef.next;
+		    secondRef=secondRef.next;
+		}
+		return true;
 		
 	}    
+	
+	Node findMiddle(Node head){
+	    Node slow=head;
+	    Node fast=head;
+	    while(fast.next!=null && fast.next.next!=null){
+	        slow=slow.next;
+	        fast=fast.next.next;
+	    }
+	    return slow;
+	}
+	
+	Node reverseLinkedlist(Node head){
+	    
+	    Node curr=head;
+	    Node prev=null;
+	    Node next;
+	    
+	    while(curr!=null){
+	        next=curr.next;
+	        curr.next=prev;
+	        prev=curr;
+	        curr=next;
+	    }
+	    return prev;
+	    
+	}
+	
 }
 
 public class PalindromeList 
