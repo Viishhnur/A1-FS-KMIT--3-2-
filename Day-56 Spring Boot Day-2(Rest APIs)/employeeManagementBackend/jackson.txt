@@ -1,0 +1,42 @@
+Who is Jackson?
+
+Jackson is a popular Java library for processing JSON data — that means:
+
+    Parsing JSON strings into Java objects (deserialization)
+
+    Converting Java objects back into JSON strings (serialization)
+
+It's one of the most widely used JSON libraries in the Java ecosystem and comes integrated by default in Spring Boot.
+Why is Jackson important in Spring?
+
+    When you use @RequestBody in a Spring controller to accept JSON input, Spring uses Jackson behind the scenes to convert that JSON into your Java class instance.
+
+    When you return a Java object from a controller, Spring uses Jackson to convert it back to JSON in the HTTP response.
+
+Key features of Jackson:
+
+    Supports POJOs (Plain Old Java Objects) with getters/setters.
+
+    Can work with no-arg constructors or parameterized constructors (with annotations).
+
+    Supports advanced features like custom serializers/deserializers.
+
+    Works seamlessly with Spring Boot and is usually auto-configured.
+
+Example:
+
+{
+  "name": "John",
+  "age": 25
+}
+
+This JSON sent to Spring controller gets converted to:
+
+public class Person {
+  private String name;
+  private int age;
+
+  // getters and setters
+}
+
+Jackson handles this conversion automatically
