@@ -33,6 +33,14 @@ class Singleton
 	}
 
 	public static Singleton getInstance2() {
+        /*
+         ❓ Why Two null Checks?
+            Check	Purpose
+            if (obj == null)	First check avoids locking if instance is already created (performance).
+            if (obj == null) inside lock	Ensures only one thread initializes the singleton, even if multiple threads 
+            reach the first check simultaneously.
+            Without the second check inside the synchronized block, multiple instances could be created under high concurrency.
+         */
 		if(obj == null) {
 		  synchronized(Singleton.class) {
 			if(obj == null) {
