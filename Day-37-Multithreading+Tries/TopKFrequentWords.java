@@ -39,7 +39,8 @@ Sample Output-2:
 [are, egg, case]
  */
 
-import java.util.*;
+import java.util.PriorityQueue;
+import java.util.Scanner;
 class TrieNode{
     TrieNode[] children;
     boolean eow;
@@ -85,7 +86,7 @@ class Trie{
 }
 public class TopKFrequentWords {
 
-    private static void dfs(TrieNode crawl,PriorityQueue<TrieNode> pq){
+    private void dfs(TrieNode crawl,PriorityQueue<TrieNode> pq){
         if(crawl == null){
             return;
         }
@@ -97,7 +98,7 @@ public class TopKFrequentWords {
             dfs(crawl.children[i], pq);
         }
     }
-    private static void printTopKWords(String[] words,final int k){
+    private void printTopKWords(String[] words,final int k){
         
         // first create a trie and insert words into it
         Trie trie = new Trie();
@@ -123,7 +124,7 @@ public class TopKFrequentWords {
 
         // Now print top k elements
         int cnt = 0;
-        while(cnt ++ < k){
+        while(cnt++ < k){
             System.out.print(pq.poll().word + " ");
         }
     }
@@ -132,7 +133,7 @@ public class TopKFrequentWords {
             String[] words = sc.nextLine().split(",");
             int k = sc.nextInt();
             
-            printTopKWords(words,k);
+            new TopKFrequentWords().printTopKWords(words,k);
         }
         
     }
