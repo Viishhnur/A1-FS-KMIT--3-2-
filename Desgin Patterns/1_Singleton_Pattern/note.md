@@ -1,3 +1,4 @@
+
 # 🧵 Java Singleton Pattern — Double-Checked Locking Explained
 
 ## 📌 What is Double-Checked Locking?
@@ -32,50 +33,71 @@ public class Singleton {
         return obj;
     }
 }
+```
 
-❓ Why Two null Checks?
-Check	Purpose
-if (obj == null)	First check avoids locking if instance is already created (performance).
-if (obj == null) inside lock	Ensures only one thread initializes the singleton, even if multiple threads reach the first check simultaneously.
+---
 
-Without the second check inside the synchronized block, multiple instances could be created under high concurrency.
-🔐 Class-Level Locking vs. Object-Level Locking
-🔷 Class-Level Locking
+## ❓ Why Two `null` Checks?
 
+| Check                        | Purpose                                                                 |
+|-----------------------------|-------------------------------------------------------------------------|
+| `if (obj == null)`          | First check avoids locking if instance is already created (performance). |
+| `if (obj == null)` inside lock | Ensures only one thread initializes the singleton, even if multiple threads reach the first check simultaneously. |
+
+⚠️ Without the second check inside the synchronized block, **multiple instances** could be created under high concurrency.
+
+---
+
+## 🔐 Class-Level Locking vs. Object-Level Locking
+
+### 🔷 Class-Level Locking
+
+```java
 synchronized (Singleton.class)
+```
 
-    Locks on the Class object, not on an instance.
+- Locks on the **Class object**, not on an instance.
+- Used when **synchronizing static members or methods**.
+- Applies to all threads accessing static members of the class.
 
-    Used when synchronizing static members or methods.
+📍 In Singleton pattern, this is **essential** because we don’t have an instance before it is created.
 
-    Applies to all threads accessing static members of the class.
+---
 
-📍 In Singleton pattern, this is essential because we don’t have an instance before it is created.
-🔶 Object-Level Locking
+### 🔶 Object-Level Locking
 
+```java
 synchronized (this)
+```
 
-or:
+or
 
+```java
 public synchronized void someMethod() { }
+```
 
-    Locks on the current instance of the object.
-
-    Used to synchronize access to instance-level fields.
-
-    Each object has its own lock.
+- Locks on the **current instance** of the object.
+- Used to **synchronize access to instance-level fields**.
+- Each object has its own lock.
 
 📍 This doesn’t help in Singleton initialization since the instance does not exist yet.
-⚠️ Important: Use volatile Keyword
 
+---
+
+## ⚠️ Important: Use `volatile` Keyword
+
+```java
 private static volatile Singleton obj;
+```
 
-    Prevents instruction reordering issues during object creation.
+- Prevents **instruction reordering** issues during object creation.
+- Ensures that when a thread writes to `obj`, the updated value is immediately visible to other threads.
 
-    Ensures that when a thread writes to obj, the updated value is immediately visible to other threads.
+---
 
-❌ Bad Singleton Example (Not Thread Safe)
+## ❌ Bad Singleton Example (Not Thread Safe)
 
+```java
 public class Singleton {
     private static Singleton obj;
 
@@ -88,12 +110,16 @@ public class Singleton {
         return obj;
     }
 }
+```
 
-Problem:
+### ❌ Problem:
+- Multiple threads can enter the `if (obj == null)` block at the same time and create **multiple instances**, breaking the Singleton principle.
 
-Multiple threads can enter the if (obj == null) block at the same time and create multiple instances, breaking the Singleton principle.
-✅ Good Singleton Example (Thread Safe & Efficient)
+---
 
+## ✅ Good Singleton Example (Thread Safe & Efficient)
+
+```java
 public class Singleton {
     private static volatile Singleton obj;
 
@@ -110,17 +136,20 @@ public class Singleton {
         return obj;
     }
 }
+```
 
-    Uses volatile to ensure visibility.
+- Uses `volatile` to ensure visibility.
+- Uses **double-checked locking** to reduce synchronization overhead.
+- Only locks when needed.
 
-    Uses double-checked locking to reduce synchronization overhead.
+---
 
-    Only locks when needed.
+## 📚 Summary
 
-📚 Summary
-Aspect	Explanation
-Double-Checked Locking	Ensures lazy initialization with thread safety.
-First null check	Avoids unnecessary synchronization.
-Second null check	Ensures only one instance is created.
-synchronized (Class.class)	Class-level locking for static members.
-volatile keyword	Prevents memory consistency issues.
+| Aspect                    | Explanation                                                            |
+|---------------------------|------------------------------------------------------------------------|
+| Double-Checked Locking    | Ensures lazy initialization with thread safety.                        |
+| First null check          | Avoids unnecessary synchronization.                                    |
+| Second null check         | Ensures only one instance is created.                                  |
+| `synchronized (Class.class)` | Class-level locking for static members.                             |
+| `volatile` keyword        | Prevents memory consistency issues.                                    |
