@@ -152,3 +152,100 @@ private Object readResolve() throws ObjectStreamException {
 Why is readResolve important in Singleton?
 
 Without readResolve, deserializing a Singleton can create multiple instances breaking the Singleton guarantee.
+
+
+# Breaking Singleton Pattern Using Reflection in Java
+
+## What is Reflection?
+
+Reflection is a feature in Java that allows programs to inspect and manipulate classes, methods, fields, and constructors at runtime — even if they are private. It is very powerful and sometimes used for advanced operations like frameworks and libraries. However, this power can be misused to bypass access controls like private constructors.
+
+---
+
+## How Does Reflection Break Singleton?
+
+The Singleton design pattern ensures only one instance of a class exists throughout the application by making the constructor private and controlling instance creation through a static method.
+
+But with Reflection, a private constructor can be accessed and invoked directly, creating multiple instances — which breaks the Singleton pattern.
+
+### Example: Breaking Singleton with Reflection
+
+```java
+import java.lang.reflect.Constructor;
+
+public class ReflectionBreakSingleton {
+    public static void main(String[] args) throws Exception {
+        // Get singleton instance normally
+        Singleton instanceOne = Singleton.getInstance();
+
+        // Get private constructor of Singleton class
+        Constructor<Singleton> constructor = Singleton.class.getDeclaredConstructor();
+        
+        // Allow access to private constructor
+        constructor.setAccessible(true);
+
+        // Create second instance via reflection
+        Singleton instanceTwo = constructor.newInstance();
+
+        // Both instances have different references (hashcodes)
+        System.out.println("Instance One HashCode: " + instanceOne.hashCode());
+        System.out.println("Instance Two HashCode: " + instanceTwo.hashCode());
+    }
+}
+
+Output:
+
+Instance One HashCode: 12345678
+Instance Two HashCode: 87654321
+
+The two instances are different, so Singleton is broken.
+How to Fix Reflection Breaking Singleton
+1. Prevent Multiple Instantiations in Constructor
+
+Add a guard inside the Singleton constructor that throws an exception if an instance already exists. This prevents Reflection from creating a second instance.
+
+public class Singleton {
+    private static volatile Singleton instance;
+    private static boolean instanceCreated = false;
+
+    private Singleton() {
+        if (instanceCreated) {
+            throw new RuntimeException("Singleton instance already created! Use getInstance().");
+        }
+        instanceCreated = true;
+    }
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+}
+
+Now, if reflection tries to call the constructor again, it will throw an exception.
+2. Use Enum Singleton (Best and Simplest Approach)
+
+Java Enums are inherently singletons and are protected against reflection and serialization issues. This makes Enums the safest way to implement Singleton.
+
+public enum SingletonEnum {
+    INSTANCE;
+
+    public void someMethod() {
+        System.out.println("Doing something");
+    }
+}
+
+Use it as:
+
+SingletonEnum.INSTANCE.someMethod();
+
+Summary Table
+Issue	Explanation	Fix
+Reflection breaks Singleton	Reflection can access private constructors and create multiple instances.	Add guard in constructor or use Enum
+Guard inside constructor	Throws exception if an instance already exists, preventing multiple instantiations.	Throw exception on multiple instantiations
+Enum Singleton	Enum types are safe from reflection and serialization issues.	Use enum-based Singleton implementation
