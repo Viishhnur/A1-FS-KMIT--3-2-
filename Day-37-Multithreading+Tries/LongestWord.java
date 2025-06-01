@@ -54,7 +54,7 @@ Sample Output-3:
 ----------------
 ""
  */
-import java.util.*;
+import java.util.Scanner;
 class TrieNode{
     TrieNode[] children;
     boolean eow;
@@ -92,34 +92,65 @@ class Trie{
         crawl.eow = true;
     }
 
+    public boolean search(String word){
+        TrieNode crawl = root;
+
+        for(char ch : word.toCharArray()){
+            int idx = ch - 'a';
+
+            if(crawl.children[idx] == null){
+                return false;
+            }
+
+            crawl = crawl.children[idx];
+        }
+
+        return crawl.eow;
+    }
 
 }
 
 public class LongestWord {
-
-    private static String getLongestWord(String[] words){
-        // create a trie and insert all the words into it 
+    
+    // A word is valid if every prefix of it is also in the list.
+    public String longestWord(String[] words) {
         Trie trie = new Trie();
+
         for(String word : words){
             trie.insert(word);
         }
+        int maxLen = 0;
+        String longestWord = "";
 
+        for (String word : words) {
+            // get all the prefixes of this word
+            boolean isPossible = true;
+            for(int j = 0 ; j < word.length() ; j++){
+                String sub = word.substring(0,j+1);
+                if(!trie.search(sub)){
+                    isPossible = false;
+                    break;
+                }
+            }
 
-        // traverse through the trie
-
-        for(int i = 0 ; i < 26 ; i++){
-            TrieNode crawl = trie.getRoot();
-
-            // start crawling into the depth of the trie 
-            while(crawl.children[i])
+            if(isPossible){
+                if(word.length() > maxLen){
+                    maxLen = word.length();
+                    longestWord = word;
+                }else if(word.length() == maxLen && word.compareTo(longestWord) < 0){
+                    longestWord = word;
+                }
+            }
         }
+
+        return longestWord;
     }
     public static void main(String[] args) {
         try(Scanner sc = new Scanner(System.in)){
 
             String[] words = sc.nextLine().split(" ");
 
-            System.out.println(getLongestWord(words));
+            System.out.println(new LongestWord().longestWord(words));
 
         }catch(Exception e){
             System.out.println(e.getMessage());
