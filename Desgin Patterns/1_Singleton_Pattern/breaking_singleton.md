@@ -197,6 +197,7 @@ Output:
 
 Instance One HashCode: 12345678
 Instance Two HashCode: 87654321
+```
 
 The two instances are different, so Singleton is broken.
 How to Fix Reflection Breaking Singleton
@@ -204,6 +205,7 @@ How to Fix Reflection Breaking Singleton
 
 Add a guard inside the Singleton constructor that throws an exception if an instance already exists. This prevents Reflection from creating a second instance.
 
+```java
 public class Singleton {
     private static volatile Singleton instance;
     private static boolean instanceCreated = false;
@@ -226,11 +228,12 @@ public class Singleton {
         return instance;
     }
 }
-
+```
 Now, if reflection tries to call the constructor again, it will throw an exception.
 2. Use Enum Singleton (Best and Simplest Approach)
 
 Java Enums are inherently singletons and are protected against reflection and serialization issues. This makes Enums the safest way to implement Singleton.
+```java
 
 public enum SingletonEnum {
     INSTANCE;
@@ -239,13 +242,15 @@ public enum SingletonEnum {
         System.out.println("Doing something");
     }
 }
-
+```
 Use it as:
 
+```java
 SingletonEnum.INSTANCE.someMethod();
+```
 
-Summary Table
-Issue	Explanation	Fix
-Reflection breaks Singleton	Reflection can access private constructors and create multiple instances.	Add guard in constructor or use Enum
-Guard inside constructor	Throws exception if an instance already exists, preventing multiple instantiations.	Throw exception on multiple instantiations
-Enum Singleton	Enum types are safe from reflection and serialization issues.	Use enum-based Singleton implementation
+| Issue                       | Explanation                                                                         | Fix                                        |
+| --------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| Reflection breaks Singleton | Reflection can access private constructors and create multiple instances.           | Add guard in constructor or use Enum       |
+| Guard inside constructor    | Throws exception if an instance already exists, preventing multiple instantiations. | Throw exception on multiple instantiations |
+| Enum Singleton              | Enum types are safe from reflection and serialization issues.                       | Use enum-based Singleton implementation    |
