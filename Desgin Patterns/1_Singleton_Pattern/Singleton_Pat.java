@@ -17,7 +17,10 @@ class Singleton implements Cloneable {
     public void sayHello() {
         System.out.println("Hello bro !!");
     }
-
+    /*
+     Cloning can break Singleton.
+    To prevent it, override clone() to either throw an exception or return the same instance.
+     */
     @Override
     protected Object clone() throws CloneNotSupportedException{
 
