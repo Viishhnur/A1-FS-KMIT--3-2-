@@ -2,6 +2,9 @@
 1) Make the constructor private so that no one can create object from outside the class
 2) Have a private static final instance variable of class type
 3) Have a public static getInstance method which returns the reference to that single object 
+
+Eg:- When I want to connect to DB , I should create a connection object , which uses singleton pattern , because I don't want
+to connect to DB every time I run a query
  */
 class Singleton implements Cloneable {
     private static Singleton obj;
