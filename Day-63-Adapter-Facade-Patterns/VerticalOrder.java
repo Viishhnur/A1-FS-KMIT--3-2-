@@ -56,6 +56,7 @@ Library Organization Rules:
 3. If books share the same position, they are arranged left to right in order of appearance.
  */
 import java.util.*;
+import java.util.stream.Collectors;
 class TreeNode{
     TreeNode left,right;
     int val;
@@ -130,15 +131,13 @@ public class VerticalOrder {
     }
    
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String[] input = scanner.nextLine().split(" ");
-        List<Integer> data = new ArrayList<>();
-        for(String s:input) {
-            data.add(Integer.parseInt(s));
+        List<Integer> inp;
+        try(Scanner sc = new Scanner(System.in)){
+
+            inp = Arrays.stream(sc.nextLine().split(" ")).map(Integer::parseInt).collect(Collectors.toList());
         }
-        scanner.close();
         
-        TreeNode root = buildTree(data);
+        TreeNode root = buildTree(inp);
         
         System.out.println(new Solution().verticalOrder(root));
     }
