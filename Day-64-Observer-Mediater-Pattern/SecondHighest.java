@@ -44,7 +44,13 @@ Sample Output-2:
 -2
  */
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 class TreeNode {
     Integer val;
@@ -56,73 +62,69 @@ class TreeNode {
     }
 }
 
-class Solution {
-    PriorityQueue<Integer>pq;
-    public Solution(){
-        pq = new PriorityQueue<>(Collections.reverseOrder()); // this is a max heap
+public class SecondHighest {
+    private final PriorityQueue<Integer> maxHeap;
+    public SecondHighest(){
+        this.maxHeap = new PriorityQueue<>(Collections.reverseOrder());
     }
-
     private void dfs(TreeNode root){
-        if(root == null){
-            return ;
-        }
+        if(root == null) return;
+        
         if(root.left != null && root.right != null){
             root.val = Math.max(root.left.val,root.right.val);
         }
-        
-        pq.offer(root.val);
+        maxHeap.offer(root.val);
         dfs(root.left);
         dfs(root.right);
-
     }
-    public int findSecondMaximumValue(TreeNode root) {
-        dfs(root);
-        int firstMax = pq.poll();
-        int secondMax = firstMax;
-        while(!pq.isEmpty() && secondMax == firstMax){
-            secondMax = pq.poll();
-        }
-        return (secondMax == firstMax) ? -2 : secondMax;
+    private int secondHighest(TreeNode root) {
+       dfs(root);
+       
+       int firstMax = maxHeap.poll();
+       int secondMax = firstMax;
+       while(!maxHeap.isEmpty() && secondMax == firstMax){
+           secondMax = maxHeap.poll();
+       }
+       
+       return (secondMax == firstMax) ? -2 : secondMax;
     }
 
     
-
-    public static void main(String[] args) {
-        List<Integer> inp;
-        try(Scanner sc = new Scanner(System.in)){
-
-            inp = Arrays.stream(sc.nextLine().split(" ")).map(Integer::parseInt).collect(Collectors.toList());
+    private TreeNode buildTree(List<Integer> data){
+        if(data.isEmpty() || data.get(0) == -1){
+            return null;
         }
         
-        TreeNode root = buildTree(inp);
-        int secondTop = new Solution().findSecondMaximumValue(root);
-        System.out.println(secondTop);
-    }
-
-    public static TreeNode buildTree(List<Integer> data) {
-        if (data.isEmpty() || data.get(0) == -1) return null;
-        
-        Queue<TreeNode> queue = new LinkedList<>();
+        Queue<TreeNode> qu = new LinkedList<>();
         TreeNode root = new TreeNode(data.get(0));
-        queue.offer(root);
-        
+        qu.offer(root);
+        int n = data.size();
         int i = 1;
-        while (i < data.size()) {
-            TreeNode current = queue.poll();
-            
-            if (i < data.size() && data.get(i) != -1) {
-                current.left = new TreeNode(data.get(i));
-                queue.offer(current.left);
+        while(i < n){
+            TreeNode curr = qu.poll();
+            if(i < n && data.get(i) != -1){
+                curr.left = new TreeNode(data.get(i));
+                qu.offer(curr.left);
             }
             i++;
             
-            if (i < data.size() && data.get(i) != -1) {
-                current.right = new TreeNode(data.get(i));
-                queue.offer(current.right);
+            if(i < n && data.get(i) != -1){
+                curr.right = new TreeNode(data.get(i));
+                qu.offer(curr.right);
             }
             i++;
         }
         
         return root;
+    }
+    public static void main(String[] args) {
+        List<Integer> data;
+        try(Scanner sc = new Scanner(System.in)){
+            data = Arrays.stream(sc.nextLine().split(" ")).map(Integer :: parseInt).collect(Collectors.toList());
+        }
+        SecondHighest obj = new SecondHighest();
+        TreeNode root = obj.buildTree(data);
+        int secondTop = obj.secondHighest(root);
+        System.out.println(secondTop);
     }
 }
