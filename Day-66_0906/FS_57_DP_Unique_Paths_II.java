@@ -96,6 +96,24 @@ public class FS_57_DP_Unique_Paths_II {
         return dp[numRows - 1][numCols - 1];
     }
 
+    static int sol(int[][] obstacleGrid) {
+        int m=obstacleGrid.length,n=obstacleGrid[0].length;
+        int[] dp = new int[n];
+        dp[0] = obstacleGrid[0][0] == 0 ? 1 : 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (obstacleGrid[i][j] == 1) {
+                    dp[j] = 0; // can't reach this cell
+                } else if (j > 0) {
+                    dp[j] += dp[j - 1]; // add left cell if not obstacle
+                }
+                // else: j == 0 (first column), nothing to add
+            }
+        }
+        return dp[n-1];
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int m = sc.nextInt(), n = sc.nextInt();
