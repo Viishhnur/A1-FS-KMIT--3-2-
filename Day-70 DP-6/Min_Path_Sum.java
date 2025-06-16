@@ -55,6 +55,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.Consumer;
+
 public class Min_Path_Sum {
     Supplier<Integer> getMax = () -> Integer.MAX_VALUE;
     private int dfs(int x,int y,int[][] grid,final int m,final int n,boolean[][] visited){
@@ -152,7 +153,7 @@ public class Min_Path_Sum {
             }
         }
         
-        System.out.println(new P1().minPathSum.apply(grid));
+        System.out.println(new Min_Path_Sum().minPathSum.apply(grid));
     }
     
 }
