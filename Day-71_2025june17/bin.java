@@ -1,36 +1,65 @@
-/*Each possible K-bit command code (from 000…0 to 111…1) must appear in the log to validate the transmission’s integrity. 
-If any K-bit pattern is missing, the message is compromised and the mission fails.
+/*
+Given a binary string s and an integer k, return true if every binary code of length k is a substring of s. Otherwise, return false.
 
-You are given:
-	A binary string S (only characters '0' and '1').
-	An integer K.
+ 
 
-Determine whether every binary code of length K appears at least once as a contiguous substring in S.
+Example 1:
+
+Input: s = "00110110", k = 2
+Output: true
+Explanation: The binary codes of length 2 are "00", "01", "10" and "11". They can be all found as substrings at indices 0, 1, 3 and 2 respectively.
+
+Example 2:
+
+Input: s = "0110", k = 1
+Output: true
+Explanation: The binary codes of length 1 are "0" and "1", it is clear that both exist as a substring. 
+
+Example 3:
+
+Input: s = "0110", k = 2
+Output: false
+Explanation: The binary code "00" is of length 2 and does not exist in the array.
+
+ 
  */
 
+import java.util.HashSet;
+import java.util.Scanner;
+import java.util.Set;
 
- import java.util.*;
 public class bin {
+    
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(System.in)) {
-            String binString=sc.nextLine();
+            String s=sc.next();
             int k=sc.nextInt();
-            boolean res=solve(binString,k);
+            boolean res=hasAllCodes(s,k);
             System.out.println(res);
         }
     }
+    
 
-    static boolean solve(String binString, int k){
-        int len=1<<k, n=binString.length();
-        if(n<k || len > n-k+1) return false;
-        boolean[] seen=new boolean[len];
-        class Solution {
-    public boolean hasAllCodes(String s, int k) {
+
+    public boolean hasAllCodes1(String s, int k) {
+        Set<String> ss = new HashSet<>();
+        int totalCodes=1<<k;
+        for (int i = 0; i < s.length() - k + 1; ++i) {
+            ss.add(s.substring(i, i + k));
+            if(ss.size()==totalCodes) return true;
+        }
+        return ss.size() == totalCodes;
+    }
+
+
+
+    static boolean hasAllCodes(String s, int k) {
         int totalCodes = 1 << k; // 2^k
         int bitmask = totalCodes - 1;
         int n = s.length();
 
-        if (n < k || totalCodes > n - k + 1) return false;
+        if (n < k || totalCodes > n - k + 1)
+            return false;
 
         boolean[] seen = new boolean[totalCodes];
         int current = 0, count = 0;
@@ -40,22 +69,10 @@ public class bin {
             if (i >= k - 1 && !seen[current]) {
                 seen[current] = true;
                 count++;
-                if (count == totalCodes) return true;
+                if (count == totalCodes)
+                    return true;
             }
         }
         return false;
-    }
-}
-
-        int current=0;
-        int mask=len-1;
-        for(int i=0;i<n-k+1;i++){
-            current=((current<<1)&mask)|(binString.charAt(i)-'0');
-            if(i>=k-1 && !s.con){
-                s.add(current);
-                if(s.size()==len) return true;
-            }
-        }
-        return  false;
     }
 }
