@@ -1,4 +1,10 @@
-import java.util.*;
+/*
+ Given an array of integers nums return the length of longest subarrays whose sum equals to 0.
+ */
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
  public class ZeroSum{
     public static void main(String[] args) {
         try (Scanner sc = new Scanner(System.in)) {
