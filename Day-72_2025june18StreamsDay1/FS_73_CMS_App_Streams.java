@@ -49,6 +49,7 @@ class Article {
  */
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FS_73_CMS_App_Streams {
@@ -74,6 +75,14 @@ public class FS_73_CMS_App_Streams {
                         Article::getAuthorName,
                         Collectors.averagingInt(Article::getWordCount)));
 
+        Optional<Map.Entry<String, Double>> topAuthor = avgWordCountByAuthor.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue());
+        //      .max((a, b) -> Double.compare(a.getValue(), b.getValue()));
+
+        topAuthor.ifPresentOrElse(
+                entry -> System.out.printf("Top author: %s (avg words: %.2f)%n", entry.getKey(), entry.getValue()),
+                () -> System.out.println("No Data Available"));
     }
 }
 
