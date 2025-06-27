@@ -1,0 +1,373 @@
+1. Predict the output
+
+List<String> names = List.of("Anna","Bob","Alice");
+long cnt = names.stream()
+                .filter(s -> s.startsWith("A"))
+                .count();
+System.out.println(cnt);
+
+A. 1
+B. 2
+C. 3
+D. 0
+Answer: B
+
+2. Predict the output
+
+List<Integer> nums = List.of(1,2,3,4);
+int sum = nums.stream()
+              .mapToInt(i -> i * 2)
+              .sum();
+System.out.println(sum);
+
+A. 10
+B. 20
+C. 16
+D. 8
+Answer: B
+
+3. Predict the output
+
+Stream.of("x","y","z")
+      .flatMap(s -> Stream.of(s.toUpperCase(), s.toLowerCase()))
+      .forEach(System.out::print);
+
+A. xyzXYZ
+B. XYZxyz
+C. XxYyZz
+D. xXyYzZ
+Answer: C
+
+4. Predict the output
+
+List<Integer> data = List.of(5,3,8,3,9,5);
+data.stream()
+    .distinct()
+    .sorted()
+    .forEach(n -> System.out.print(n + " "));
+
+A. 5 3 8 9
+B. 3 5 8 9
+C. 5 3 8 3 9
+D. 3 8 5 9
+Answer: B
+
+5. Predict the output
+
+IntStream.range(1,5)
+         .skip(2)
+         .forEach(System.out::print);
+
+A. 1234
+B. 12
+C. 345
+D. 34
+Answer: D
+
+6. Predict the output
+
+Optional<String> first = Stream.<String>empty()
+                               .findFirst();
+System.out.println(first.isPresent());
+
+A. true
+B. false
+C. null
+D. NoSuchElementException
+Answer: B
+
+7. Predict the output
+
+List<String> items = List.of("a","b","c");
+String result = items.stream()
+                     .reduce("", (a,b) -> a + b);
+System.out.println(result);
+
+A. abc
+B. cba
+C. [a, b, c]
+D. Compilation error
+Answer: A
+
+8. Predict the output
+
+List<Integer> list = List.of(1,2,3,4,5);
+long even = list.parallelStream()
+                .filter(i -> i % 2 == 0)
+                .count();
+System.out.println(even);
+
+A. 3
+B. 2
+C. 0
+D. Depends on thread scheduling
+Answer: B
+
+9. Predict the output
+
+List<String> vals = List.of("one","two","three");
+String joined = vals.stream()
+                    .collect(Collectors.joining("|"));
+System.out.println(joined);
+
+A. one,two,three
+B. one|two|three
+C. [one|two|three]
+D. one two three
+Answer: B
+
+10. Predict the output
+
+List<String> l = List.of("  a  "," b","c ");
+l.stream()
+ .map(String::trim)
+ .forEach(s -> System.out.print("[" + s + "]"));
+
+A. [a][b][c]
+B. [  a  ][ b][c ]
+C. [a, b, c]
+D. [ a ][ b ][ c ]
+Answer: A
+
+11. Which snippet produces
+
+Map<String, Integer> freq = {apple=2, banana=1}
+
+A.
+
+List<String> fruits = List.of("apple","banana","apple");
+fruits.stream()
+      .collect(Collectors.groupingBy(f -> f, Collectors.counting()));
+
+B.
+
+List<String> fruits = List.of("apple","banana","apple");
+fruits.stream()
+      .collect(Collectors.toMap(f->f, f->1, Integer::sum));
+
+C.
+
+List<String> fruits = List.of("apple","banana","apple");
+fruits.stream()
+      .collect(Collectors.toMap(f->f, f->1));
+
+D.
+
+List<String> fruits = List.of("apple","banana","apple");
+fruits.stream()
+      .collect(Collectors.groupingBy(f -> f, Collectors.summingInt(f -> 1)));
+
+Answer: B
+
+12. Which snippet prints
+
+0 2 4 6 8 
+
+A.
+
+IntStream.rangeClosed(0,8)
+         .filter(i->i%2==0)
+         .forEach(System.out::print);
+
+B.
+
+IntStream.range(0,5)
+         .map(i->i*2)
+         .forEach(i->System.out.print(i+" "));
+
+C.
+
+IntStream.of(0,2,4,6,8)
+         .forEach(System.out::print);
+
+D.
+
+IntStream.range(0,8)
+         .map(i->i*2)
+         .forEach(i->System.out.print(i+" "));
+
+Answer: B
+
+13. Which snippet yields
+
+[A, B, C]
+
+from `List<String> list = List.of("a","b","c");`?
+A.
+
+list.stream()
+    .map(String::toUpperCase)
+    .collect(Collectors.toList());
+
+B.
+
+list.stream()
+    .collect(Collectors.toList())
+    .stream()
+    .map(String::toUpperCase)
+    .toList();
+
+C.
+
+list.parallelStream()
+    .map(String::toUpperCase)
+    .toList();
+
+D. All of the above
+Answer: D
+
+14. Which snippet produces a sorted, distinct list of even squares
+
+[4,16,36]
+
+from `List<Integer> nums = List.of(1,2,3,4,5,6);`?
+A.
+
+nums.stream()
+    .map(i->i*i)
+    .filter(i->i%2==0)
+    .sorted()
+    .distinct()
+    .collect(Collectors.toList());
+
+B.
+
+nums.stream()
+    .filter(i->i%2==0)
+    .map(i->i*i)
+    .distinct()
+    .sorted()
+    .toList();
+
+C. Both A and B
+D. Neither
+Answer: C
+
+15. Which snippet prints
+
+Found: 42
+
+only if any element equals 42?
+A.
+
+Stream.of(10,42,30)
+      .filter(i->i==42)
+      .forEach(i->System.out.println("Found: "+i));
+
+B.
+
+List.of(10,42,30).stream()
+    .anyMatch(i->i==42)
+    .ifPresent(i->System.out.println("Found: "+i));
+
+C.
+
+Stream.of(10,42,30)
+      .filter(i->i==42)
+      .findFirst()
+      .ifPresent(i->System.out.println("Found: "+i));
+
+D.
+
+Stream.of(10,42,30)
+      .findAny(i->i==42)
+      .ifPresent(i->System.out.println("Found: "+i));
+
+Answer: C
+
+16. Which snippet creates a comma-separated string
+
+a,b,c
+
+from `List<String> lst = List.of("a","b","c");`?
+A.
+
+String s = String.join(",", lst);
+
+B.
+
+String s = lst.stream().collect(Collectors.joining(","));
+
+C.
+
+String s = lst.stream().reduce((x,y)-> x+","+y).get();
+
+D. All of the above
+Answer: D
+
+17. Which snippet prints only the first two distinct names
+
+Alice
+Bob
+
+from `List<String> names = List.of("Bob","Alice","Bob","Charlie");`?
+A.
+
+names.stream()
+     .distinct()
+     .limit(2)
+     .forEach(System.out::println);
+
+B.
+
+names.stream()
+     .limit(2)
+     .distinct()
+     .forEach(System.out::println);
+
+C. Both A and B
+D. Neither
+Answer: A
+
+18. Which snippet produces the product of all elements
+
+24
+
+from `List<Integer> nums = List.of(1,2,3,4);`?
+A.
+
+nums.stream().reduce(1, (a,b)->a*b);
+
+B.
+
+nums.stream().reduce((a,b)->a*b).get();
+
+C. Both A and B
+D. Neither
+Answer: C
+
+19. Which snippet maps a list of lists to a flat list
+
+[1,2,3,4]
+ 
+from `List<List<Integer>> ll = List.of(List.of(1,2),List.of(3,4));`?
+A.
+
+ll.stream()
+  .flatMap(Collection::stream)
+  .collect(Collectors.toList());
+
+B.
+
+ll.stream()
+  .map(Collection::stream)
+  .flatMap(s->s)
+  .toList();
+
+C. Both A and B
+D. Neither
+Answer: C
+
+20. Which snippet finds the maximum value 9
+from `List<Integer> nums = List.of(3,9,1,4);`?
+A.
+
+nums.stream().max(Integer::compare).get();
+
+B.
+
+nums.stream().reduce(Integer::max).get();
+
+C. Both A and B
+D. Neither
+Answer: C
